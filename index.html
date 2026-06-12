@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cash — Gérer votre argent en toute simplicité</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Découvrez Cash, l'application mobile de gestion de budget minimaliste et premium. Suivez vos dépenses, gérez vos portefeuilles et maîtrisez vos finances en toute simplicité.">
+    <meta name="keywords" content="budget, finances personnelles, gestion argent, epargne, minimaliste, cash, application android">
+    <meta name="author" content="Cash App">
+    
+    <!-- Google Fonts (Outfit & Plus Jakarta Sans) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Header / Navbar -->
+    <header class="header">
+        <div class="header-container">
+            <a href="#" class="logo">
+                <span>Cash</span>
+            </a>
+            <nav class="nav">
+                <a href="#features" class="nav-link">Fonctionnalités</a>
+                <a href="#preview" class="nav-link">Aperçu</a>
+                <a href="#join-waitlist" class="btn btn-secondary btn-sm">Bêta Android</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-container">
+                <div class="hero-content">
+                    <div class="badge-android">
+                        <ion-icon name="logo-android"></ion-icon>
+                        <span>Version Android Bêta</span>
+                    </div>
+                    <h1 class="hero-title">
+                        Prenez le contrôle de votre argent, <span>simplement.</span>
+                    </h1>
+                    <p class="hero-subtitle">
+                        Cash est l'application minimaliste et premium conçue pour suivre vos dépenses journalières, définir des portefeuilles dédiés et maîtriser vos budgets mensuels en quelques clics.
+                    </p>
+                    
+                    <!-- Real-time Waitlist Counter -->
+                    <div class="waitlist-counter">
+                        <div class="counter-pulse"></div>
+                        <span class="counter-text">
+                            Déjà <strong id="waitlist-counter-value">...</strong> personnes inscrites pour tester Cash
+                        </span>
+                    </div>
+
+                    <div class="hero-actions">
+                        <a href="#join-waitlist" class="btn btn-primary">
+                            Rejoindre la bêta & Télécharger
+                            <ion-icon name="arrow-forward"></ion-icon>
+                        </a>
+                        <a href="#preview" class="btn btn-tertiary">
+                            <ion-icon name="play-circle-outline"></ion-icon>
+                            Voir la démo
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Showcase Phone Mockup -->
+                <div class="hero-showcase">
+                    <div class="phone-mockup">
+                        <div class="phone-screen">
+                            <div class="phone-status-bar">
+                                <span class="time">12:30</span>
+                                <div class="icons">
+                                    <ion-icon name="wifi-outline"></ion-icon>
+                                    <ion-icon name="cellular-outline"></ion-icon>
+                                    <ion-icon name="battery-full-outline"></ion-icon>
+                                </div>
+                            </div>
+                            <div class="phone-content-video">
+                                <video autoplay loop muted playsinline id="app-demo-video">
+                                    <source src="images/video-2.mp4" type="video/mp4">
+                                    Votre navigateur ne supporte pas les vidéos HTML5.
+                                </video>
+                            </div>
+                            <div class="phone-home-indicator"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Key Features Section -->
+        <section id="features" class="features">
+            <div class="section-header">
+                <h2 class="section-title">Pourquoi choisir Cash ?</h2>
+                <p class="section-desc">Tout ce dont vous avez besoin pour suivre vos finances personnelles, sans les fonctionnalités complexes qui encombrent votre quotidien.</p>
+            </div>
+            
+            <div class="features-grid">
+                <!-- Card 1: Portfolios -->
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <ion-icon name="wallet-outline"></ion-icon>
+                    </div>
+                    <h3>Portefeuilles Multiples</h3>
+                    <p>Séparez vos budgets : un portefeuille pour vos courses, un autre pour vos vacances, un pour vos dépenses pro. La liberté totale.</p>
+                </div>
+
+                <!-- Card 2: Speed -->
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <ion-icon name="add-circle-outline"></ion-icon>
+                    </div>
+                    <h3>Saisie Ultra Rapide</h3>
+                    <p>Ajoutez une transaction en moins de 3 secondes avec nos raccourcis de catégorisation ergonomiques et personnalisés.</p>
+                </div>
+
+                <!-- Card 3: Budget Limit -->
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <ion-icon name="warning-outline"></ion-icon>
+                    </div>
+                    <h3>Gestion de Budgets</h3>
+                    <p>Définissez une limite de dépenses mensuelle pour vos portefeuilles et recevez une alerte visuelle avant de dépasser votre objectif.</p>
+                </div>
+
+                <!-- Card 4: Light Design -->
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <ion-icon name="sparkles-outline"></ion-icon>
+                    </div>
+                    <h3>Design Minimaliste</h3>
+                    <p>Une palette ivoire et charbon raffinée inspirée des plus beaux designs d'applications modernes. Pas de publicité, pas de distraction.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Media Preview Section (Screenshots Gallery) -->
+        <section id="preview" class="preview">
+            <div class="section-header">
+                <h2 class="section-title">L'application sous toutes ses coutures</h2>
+                <p class="section-desc">Parcourez les écrans de Cash et découvrez son interface épurée et moderne.</p>
+            </div>
+
+            <!-- Horizontal Scroll Screenshot Container -->
+            <div class="screenshots-wrapper">
+                <div class="screenshots-container">
+                    <div class="screenshot-item">
+                        <img src="images/screen-1.jpeg" alt="Écran principal de l'application Cash">
+                        <span>Aperçu global & Solde</span>
+                    </div>
+                    <div class="screenshot-item">
+                        <img src="images/screen-2.jpeg" alt="Graphiques et statistiques mensuels">
+                        <span>Statistiques claires</span>
+                    </div>
+                    <div class="screenshot-item">
+                        <img src="images/screen-3.jpeg" alt="Création de nouveau portefeuille">
+                        <span>Multi-Portefeuilles</span>
+                    </div>
+                    <div class="screenshot-item">
+                        <img src="images/screen-4.jpeg" alt="Ajout rapide de transaction">
+                        <span>Saisie intuitive</span>
+                    </div>
+                    <div class="screenshot-item">
+                        <img src="images/screen-5.jpeg" alt="Paramètres et options du profil">
+                        <span>Personnalisation</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Waitlist and Download Section -->
+        <section id="join-waitlist" class="waitlist-section">
+            <div class="waitlist-card">
+                
+                <!-- Initial Form View -->
+                <div id="waitlist-form-container" class="waitlist-form-container">
+                    <div class="form-header">
+                        <h2 class="form-title">Télécharger Cash Bêta</h2>
+                        <p class="form-desc">Inscrivez-vous pour rejoindre le groupe de testeurs et obtenir le lien de téléchargement immédiat de l'application Android.</p>
+                    </div>
+                    
+                    <form id="waitlist-form" novalidate>
+                        <div class="form-row-grid">
+                            <div class="form-group">
+                                <label for="waitlist-firstname">Votre prénom</label>
+                                <input type="text" id="waitlist-firstname" placeholder="Ex: Jean" required>
+                                <span class="error-message" id="error-firstname">Le prénom est requis.</span>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="waitlist-lastname">Votre nom</label>
+                                <input type="text" id="waitlist-lastname" placeholder="Ex: Dupont" required>
+                                <span class="error-message" id="error-lastname">Le nom est requis.</span>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="waitlist-whatsapp">Votre numéro WhatsApp</label>
+                            <input type="tel" id="waitlist-whatsapp" placeholder="Ex: +225 0707070707" required>
+                            <span class="error-message" id="error-whatsapp">Un numéro WhatsApp valide est requis.</span>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="waitlist-email">Votre adresse e-mail (Optionnel)</label>
+                            <input type="email" id="waitlist-email" placeholder="Ex: jean.dupont@email.com">
+                            <span class="error-message" id="error-email">Veuillez entrer une adresse e-mail valide.</span>
+                        </div>
+
+                        <div id="form-error-general" class="error-general">
+                            Une erreur est survenue lors de l'enregistrement. Veuillez réessayer.
+                        </div>
+
+                        <button type="submit" id="waitlist-submit" class="btn btn-primary btn-block">
+                            <span>S'enregistrer & Débloquer l'accès</span>
+                            <ion-icon name="lock-open-outline"></ion-icon>
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Success / Download View (Hidden initially) -->
+                <div id="waitlist-success-container" class="waitlist-success-container hidden">
+                    <div class="success-icon">
+                        <ion-icon name="checkmark-circle-outline"></ion-icon>
+                    </div>
+                    <h2 class="success-title">Bienvenue dans la bêta, <span id="success-user-name">Jean</span> !</h2>
+                    <p class="success-desc">Vos informations ont été enregistrées avec succès. Vous pouvez maintenant télécharger la dernière version de l'application.</p>
+                    
+                    <div class="download-box">
+                        <div class="download-badge">
+                            <ion-icon name="logo-android"></ion-icon>
+                            <span>Fichier APK Android</span>
+                        </div>
+                        <h3>Cash Mobile v1.0.0</h3>
+                        <p>Format : APK (Expo Build) | Taille : ~25 Mo</p>
+                        
+                        <a href="https://expo.dev/accounts/sknyves/projects/cash/builds/3311a9e0-cbc3-4d8b-b825-1df80d84057f" id="download-link" class="btn btn-success btn-block" target="_blank" rel="noopener noreferrer">
+                            <ion-icon name="download-outline"></ion-icon>
+                            <span>Télécharger l'APK Cash</span>
+                        </a>
+                        
+                        <p class="download-instruction">
+                            <em>Note : Comme il s'agit d'une version bêta en dehors du Play Store, vous devrez autoriser l'installation d'applications de sources inconnues lors de l'ouverture du fichier sur votre téléphone.</em>
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-brand">
+                <span class="footer-logo">Cash</span>
+                <p>La gestion budgétaire comme elle devrait être : simple, rapide et élégante.</p>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Cash App. Développé pour Android avec Expo.</p>
+                <a href="admin.html" class="footer-admin-link">
+                    <ion-icon name="settings-outline"></ion-icon>
+                    <span>Administration</span>
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Ionicons Script Tags -->
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
+    <!-- Supabase and App Script -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="config.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

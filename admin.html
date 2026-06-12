@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cash — Administration Waitlist</title>
+    <meta name="robots" content="noindex, nofollow">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+
+    <style>
+    /* =========================================
+       RESET & VARIABLES
+    ========================================= */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+        --bg:           #F5F5F0;
+        --surface:      #FFFFFF;
+        --alt:          #EEEEE8;
+        --text:         #1A1A1A;
+        --sub:          #7A7A7A;
+        --light:        #ADADAD;
+        --border:       #E8E8E2;
+        --income:       #2ECC71;
+        --income-bg:    #E8F8F0;
+        --expense:      #E74C3C;
+        --expense-bg:   #FDF0EF;
+        --warning:      #F39C12;
+        --warning-bg:   #FEF9EF;
+        --shadow-sm:    0 2px 8px rgba(0,0,0,.04);
+        --shadow-md:    0 8px 24px rgba(0,0,0,.07);
+        --r-sm:         8px;
+        --r-md:         14px;
+        --r-lg:         20px;
+        --font-h:       'Outfit', sans-serif;
+        --font-b:       'Plus Jakarta Sans', sans-serif;
+    }
+
+    html { font-size: 16px; scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--text); font-family: var(--font-b); line-height: 1.5; -webkit-font-smoothing: antialiased; min-height: 100vh; }
+    h1,h2,h3,h4 { font-family: var(--font-h); }
+    a { text-decoration: none; color: inherit; }
+
+    /* =========================================
+       ÉCRAN DE LOGIN
+    ========================================= */
+    #login-screen {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem;
+    }
+
+    .login-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--r-lg);
+        padding: 3rem;
+        width: 100%;
+        max-width: 440px;
+        box-shadow: var(--shadow-md);
+        text-align: center;
+    }
+
+    .login-logo {
+        font-family: var(--font-h);
+        font-size: 2rem;
+        font-weight: 900;
+        letter-spacing: -1px;
+        margin-bottom: 0.35rem;
+        position: relative;
+        display: inline-block;
+    }
+
+    .login-logo::after {
+        content: '';
+        position: absolute;
+        bottom: 6px;
+        right: -7px;
+        width: 6px;
+        height: 6px;
+        background: var(--income);
+        border-radius: 50%;
+    }
+
+    .login-subtitle {
+        font-size: 0.9rem;
+        color: var(--sub);
+        margin-bottom: 2.5rem;
+        display: block;
+    }
+
+    .login-label {
+        display: block;
+        font-size: 0.8rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: .5px;
+        color: var(--sub);
+        margin-bottom: .5rem;
+        text-align: left;
+    }
+
+    .login-input-wrap {
+        position: relative;
+        margin-bottom: 1.25rem;
+    }
+
+    .login-input {
+        width: 100%;
+        font-family: var(--font-b);
+        font-size: .95rem;
+        padding: .9rem 3rem .9rem 1.1rem;
+        border: 1px solid var(--border);
+        border-radius: var(--r-md);
+        background: var(--bg);
+        color: var(--text);
+        outline: none;
+        transition: border-color .2s, box-shadow .2s;
+    }
+
+    .login-input:focus { border-color: var(--text); box-shadow: 0 0 0 4px rgba(26,26,26,.06); }
+
+    .toggle-eye {
+        position: absolute;
+        right: .9rem;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: var(--light);
+        font-size: 1rem;
+        padding: .25rem;
+    }
+
+    .login-remember {
+        display: flex;
+        align-items: center;
+        gap: .5rem;
+        font-size: .85rem;
+        color: var(--sub);
+        margin-bottom: 1.75rem;
+        text-align: left;
+    }
+
+    .login-remember input[type=checkbox] { accent-color: var(--text); }
+
+    .login-error {
+        font-size: .85rem;
+        font-weight: 700;
+        color: var(--expense);
+        background: var(--expense-bg);
+        border: 1px solid rgba(231,76,60,.2);
+        padding: .65rem 1rem;
+        border-radius: var(--r-sm);
+        margin-bottom: 1.25rem;
+        display: none;
+    }
+
+    /* =========================================
+       DASHBOARD
+    ========================================= */
+    #dashboard-screen { display: none; min-height: 100vh; }
+
+    .dash-header {
+        background: var(--surface);
+        border-bottom: 1px solid var(--border);
+        position: sticky;
+        top: 0;
+        z-index: 50;
+        backdrop-filter: blur(8px);
+    }
+
+    .dash-header-inner {
+        max-width: 1300px;
+        margin: 0 auto;
+        padding: 1rem 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+    }
+
+    .dash-logo {
+        font-family: var(--font-h);
+        font-size: 1.4rem;
+        font-weight: 900;
+        letter-spacing: -.8px;
+        display: flex;
+        align-items: center;
+        gap: .75rem;
+    }
+
+    .dash-logo-dot {
+        width: 8px; height: 8px;
+        background: var(--income);
+        border-radius: 50%;
+    }
+
+    .badge-admin {
+        font-size: .7rem;
+        font-weight: 800;
+        background: var(--alt);
+        color: var(--sub);
+        padding: .2rem .65rem;
+        border-radius: 99px;
+        border: 1px solid var(--border);
+        letter-spacing: .3px;
+    }
+
+    .dash-header-actions { display: flex; gap: .75rem; align-items: center; }
+
+    .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: .4rem;
+        font-family: var(--font-b);
+        font-weight: 700;
+        font-size: .85rem;
+        padding: .6rem 1.2rem;
+        border-radius: 99px;
+        border: none;
+        cursor: pointer;
+        transition: all .2s ease;
+    }
+
+    .btn-dark { background: var(--text); color: #fff; }
+    .btn-dark:hover { opacity: .85; transform: translateY(-1px); }
+
+    .btn-outline {
+        background: transparent;
+        color: var(--sub);
+        border: 1px solid var(--border);
+    }
+    .btn-outline:hover { background: var(--alt); color: var(--text); }
+
+    .btn-success { background: var(--income); color: #fff; }
+    .btn-success:hover { background: #27ae60; transform: translateY(-1px); }
+
+    /* =========================================
+       CONTENU DASHBOARD
+    ========================================= */
+    .dash-body {
+        max-width: 1300px;
+        margin: 0 auto;
+        padding: 2.5rem 2rem;
+    }
+
+    .dash-title-row {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 1rem;
+        margin-bottom: 2rem;
+        flex-wrap: wrap;
+    }
+
+    .dash-title { font-size: 1.7rem; font-weight: 800; letter-spacing: -.6px; }
+    .dash-sub { font-size: .9rem; color: var(--sub); margin-top: .25rem; }
+
+    /* =========================================
+       STATS CARDS
+    ========================================= */
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.25rem;
+        margin-bottom: 2.5rem;
+    }
+
+    .stat-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--r-md);
+        padding: 1.5rem;
+        box-shadow: var(--shadow-sm);
+    }
+
+    .stat-label {
+        font-size: .75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: .5px;
+        color: var(--sub);
+        margin-bottom: .75rem;
+        display: flex;
+        align-items: center;
+        gap: .4rem;
+    }
+
+    .stat-icon { font-size: 1.25rem; color: var(--sub); display: inline-flex; align-items: center; justify-content: center; }
+    .stat-value { font-family: var(--font-h); font-size: 2.25rem; font-weight: 800; letter-spacing: -1px; line-height: 1; }
+    .stat-detail { font-size: .8rem; color: var(--sub); margin-top: .4rem; }
+    .stat-badge { display: inline-block; font-size: .7rem; font-weight: 800; padding: .15rem .55rem; border-radius: 99px; margin-left: .3rem; }
+    .badge-green { background: var(--income-bg); color: var(--income); }
+    .badge-orange { background: var(--warning-bg); color: var(--warning); }
+
+    /* =========================================
+       TOOLBAR (recherche + filtres)
+    ========================================= */
+    .table-toolbar {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+        align-items: center;
+        margin-bottom: 1.25rem;
+    }
+
+    .search-wrap {
+        position: relative;
+        flex: 1;
+        min-width: 200px;
+    }
+
+    .search-icon {
+        position: absolute;
+        left: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--light);
+        font-size: .95rem;
+        pointer-events: none;
+    }
+
+    .search-input {
+        width: 100%;
+        font-family: var(--font-b);
+        font-size: .9rem;
+        padding: .7rem 1rem .7rem 2.6rem;
+        border: 1px solid var(--border);
+        border-radius: 99px;
+        background: var(--surface);
+        color: var(--text);
+        outline: none;
+        transition: border-color .2s, box-shadow .2s;
+    }
+
+    .search-input:focus { border-color: var(--text); box-shadow: 0 0 0 3px rgba(26,26,26,.05); }
+
+    .filter-select {
+        font-family: var(--font-b);
+        font-size: .85rem;
+        font-weight: 600;
+        padding: .7rem 1.1rem;
+        border: 1px solid var(--border);
+        border-radius: 99px;
+        background: var(--surface);
+        color: var(--text);
+        cursor: pointer;
+        outline: none;
+    }
+
+    /* =========================================
+       TABLEAU
+    ========================================= */
+    .table-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--r-md);
+        box-shadow: var(--shadow-sm);
+        overflow: hidden;
+    }
+
+    .table-wrap { overflow-x: auto; }
+
+    table { width: 100%; border-collapse: collapse; font-size: .9rem; }
+
+    thead th {
+        background: var(--alt);
+        font-family: var(--font-h);
+        font-size: .75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: .5px;
+        color: var(--sub);
+        padding: .9rem 1.25rem;
+        text-align: left;
+        white-space: nowrap;
+        cursor: pointer;
+        user-select: none;
+        border-bottom: 1px solid var(--border);
+        transition: color .15s;
+    }
+
+    thead th:hover { color: var(--text); }
+    thead th.sorted { color: var(--text); }
+
+    thead th .sort-icon { display: inline-flex; align-items: center; margin-left: .35rem; opacity: .4; vertical-align: middle; font-size: 0.95rem; }
+    thead th.sorted .sort-icon { opacity: 1; }
+
+    tbody tr {
+        border-bottom: 1px solid var(--border);
+        transition: background .15s;
+    }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: var(--bg); }
+
+    tbody td { padding: 1rem 1.25rem; vertical-align: middle; }
+
+    .cell-name { font-weight: 700; color: var(--text); }
+    .cell-phone { font-family: monospace; font-size: .85rem; }
+    .cell-email { font-size: .85rem; color: var(--sub); }
+    .cell-email.empty { color: var(--light); font-style: italic; }
+    .cell-date { font-size: .8rem; color: var(--sub); white-space: nowrap; }
+
+    .avatar-chip {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        background: var(--alt);
+        font-family: var(--font-h);
+        font-size: .9rem;
+        font-weight: 800;
+        color: var(--text);
+        flex-shrink: 0;
+    }
+
+    .cell-name-wrap { display: flex; align-items: center; gap: .75rem; }
+
+    /* =========================================
+       ÉTAT VIDE / CHARGEMENT
+    ========================================= */
+    .table-empty {
+        text-align: center;
+        padding: 4rem 2rem;
+        color: var(--light);
+    }
+
+    .table-empty-icon { font-size: 2.5rem; margin-bottom: 1rem; }
+    .table-empty-text { font-size: .95rem; font-weight: 600; }
+
+    .table-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: .85rem 1.25rem;
+        border-top: 1px solid var(--border);
+        font-size: .8rem;
+        color: var(--sub);
+        gap: 1rem;
+        flex-wrap: wrap;
+        background: var(--alt);
+    }
+
+    /* =========================================
+       LOADING SPINNER
+    ========================================= */
+    .spinner {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        border: 2px solid var(--border);
+        border-radius: 50%;
+        border-top-color: var(--text);
+        animation: spin 0.7s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .loading-row td { text-align: center; padding: 3rem; }
+
+    /* =========================================
+       RESPONSIVE
+    ========================================= */
+    @media (max-width: 700px) {
+        .dash-header-inner { padding: .85rem 1.25rem; }
+        .dash-body { padding: 1.5rem 1.25rem; }
+        .dash-title { font-size: 1.35rem; }
+        .btn span { display: none; }
+    }
+    </style>
+</head>
+<body>
+
+<!-- ==========================================
+     ÉCRAN DE LOGIN
+========================================== -->
+<div id="login-screen">
+    <div class="login-card">
+        <span class="login-logo">Cash</span>
+        <span class="login-subtitle">Espace d'administration — Waitlist</span>
+
+        <label class="login-label" for="admin-key">Clé API Supabase (service_role)</label>
+        <div class="login-input-wrap">
+            <input
+                type="password"
+                id="admin-key"
+                class="login-input"
+                placeholder="eyJhbGciOiJIUzI1NiIs..."
+                autocomplete="off"
+            >
+            <button class="toggle-eye" id="toggle-key-visibility" title="Afficher/Masquer la clé">
+                <ion-icon name="eye-outline"></ion-icon>
+            </button>
+        </div>
+
+        <label class="login-remember">
+            <input type="checkbox" id="remember-key" checked>
+            Mémoriser sur cet appareil (LocalStorage)
+        </label>
+
+        <div class="login-error" id="login-error">Clé invalide ou données inaccessibles. Vérifiez votre clé service_role.</div>
+
+        <button class="btn btn-dark" id="login-btn" style="width:100%; justify-content:center; padding:.9rem;">
+            <span>Accéder au dashboard</span>
+        </button>
+
+        <p style="font-size:.75rem; color:var(--light); margin-top:1.5rem; line-height:1.5;">
+            Utilisez la clé <strong>service_role</strong> de votre projet Supabase.<br>
+            Elle ne sera jamais transmise à un tiers.
+        </p>
+
+        <div style="margin-top:1.5rem; padding-top:1.5rem; border-top:1px solid var(--border);">
+            <a href="index.html" style="font-size:.8rem; color:var(--sub); display:inline-flex; align-items:center; gap:.4rem;">
+                <ion-icon name="arrow-back-outline"></ion-icon> Retour à la landing page
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- ==========================================
+     DASHBOARD
+========================================== -->
+<div id="dashboard-screen">
+
+    <!-- Header -->
+    <header class="dash-header">
+        <div class="dash-header-inner">
+            <div class="dash-logo">
+                <div class="dash-logo-dot"></div>
+                Cash
+                <span class="badge-admin">ADMIN</span>
+            </div>
+            <div class="dash-header-actions">
+                <button class="btn btn-success" id="export-csv-btn">
+                    <ion-icon name="download-outline"></ion-icon> <span>Exporter CSV</span>
+                </button>
+                <button class="btn btn-outline" id="refresh-btn">
+                    <ion-icon name="refresh-outline"></ion-icon> <span>Actualiser</span>
+                </button>
+                <button class="btn btn-outline" id="logout-btn">
+                    <ion-icon name="log-out-outline"></ion-icon> <span>Déconnexion</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="dash-body">
+
+        <!-- Titre -->
+        <div class="dash-title-row">
+            <div>
+                <h1 class="dash-title">Liste des inscrits</h1>
+                <p class="dash-sub">Tous les utilisateurs ayant rejoint la liste d'attente pour tester Cash.</p>
+            </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-grid" id="stats-grid">
+            <div class="stat-card">
+                <div class="stat-label"><ion-icon name="people-outline" class="stat-icon"></ion-icon> Total inscrits</div>
+                <div class="stat-value" id="stat-total">—</div>
+                <div class="stat-detail">Depuis le lancement</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label"><ion-icon name="mail-outline" class="stat-icon"></ion-icon> Avec e-mail</div>
+                <div class="stat-value" id="stat-email">—</div>
+                <div class="stat-detail" id="stat-email-pct">—</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label"><ion-icon name="calendar-outline" class="stat-icon"></ion-icon> Dernière inscription</div>
+                <div class="stat-value" style="font-size:1.3rem;" id="stat-last">—</div>
+                <div class="stat-detail" id="stat-last-name">—</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label"><ion-icon name="trending-up-outline" class="stat-icon"></ion-icon> Ce mois-ci</div>
+                <div class="stat-value" id="stat-month">—</div>
+                <div class="stat-detail" id="stat-month-label">—</div>
+            </div>
+        </div>
+
+        <!-- Toolbar -->
+        <div class="table-toolbar">
+            <div class="search-wrap">
+                <ion-icon name="search-outline" class="search-icon"></ion-icon>
+                <input
+                    type="text"
+                    id="search-input"
+                    class="search-input"
+                    placeholder="Rechercher par nom, prénom, WhatsApp ou e-mail..."
+                >
+            </div>
+            <select id="sort-select" class="filter-select">
+                <option value="created_at-desc">Plus récent d'abord</option>
+                <option value="created_at-asc">Plus ancien d'abord</option>
+                <option value="last_name-asc">Nom A → Z</option>
+                <option value="last_name-desc">Nom Z → A</option>
+                <option value="first_name-asc">Prénom A → Z</option>
+            </select>
+        </div>
+
+        <!-- Tableau -->
+        <div class="table-card">
+            <div class="table-wrap">
+                <table id="waitlist-table">
+                    <thead>
+                        <tr>
+                            <th data-col="last_name">#&nbsp;&nbsp;Nom complet <ion-icon name="swap-vertical-outline" class="sort-icon"></ion-icon></th>
+                            <th data-col="whatsapp">WhatsApp <ion-icon name="swap-vertical-outline" class="sort-icon"></ion-icon></th>
+                            <th data-col="email">E-mail <ion-icon name="swap-vertical-outline" class="sort-icon"></ion-icon></th>
+                            <th data-col="created_at">Date d'inscription <ion-icon name="swap-vertical-outline" class="sort-icon"></ion-icon></th>
+                        </tr>
+                    </thead>
+                    <tbody id="waitlist-tbody">
+                        <tr class="loading-row">
+                            <td colspan="4">
+                                <div class="spinner"></div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="table-footer">
+                <span id="table-count">Chargement...</span>
+                <span id="table-time">—</span>
+            </div>
+        </div>
+
+    </main>
+</div>
+
+<!-- Ionicons -->
+<script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
+<!-- Supabase -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+
+<script>
+/* =========================================
+   CONFIGURATION
+========================================= */
+const SUPABASE_URL = window.CASH_CONFIG?.SUPABASE_URL || '';
+const STORAGE_KEY  = 'cash_admin_key';
+
+let adminClient = null;
+let allData     = [];
+let sortCol     = 'created_at';
+let sortDir     = 'desc';
+let searchTerm  = '';
+
+/* =========================================
+   DOM REFS
+========================================= */
+const loginScreen     = document.getElementById('login-screen');
+const dashScreen      = document.getElementById('dashboard-screen');
+const adminKeyInput   = document.getElementById('admin-key');
+const loginBtn        = document.getElementById('login-btn');
+const loginError      = document.getElementById('login-error');
+const rememberChk     = document.getElementById('remember-key');
+const toggleEyeBtn    = document.getElementById('toggle-key-visibility');
+const logoutBtn       = document.getElementById('logout-btn');
+const refreshBtn      = document.getElementById('refresh-btn');
+const exportCsvBtn    = document.getElementById('export-csv-btn');
+const searchInput     = document.getElementById('search-input');
+const sortSelect      = document.getElementById('sort-select');
+const tbody           = document.getElementById('waitlist-tbody');
+const tableCount      = document.getElementById('table-count');
+const tableTime       = document.getElementById('table-time');
+
+/* =========================================
+   LOGIN FLOW
+========================================= */
+
+// Pré-remplir la clé si mémorisée
+window.addEventListener('DOMContentLoaded', () => {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+        adminKeyInput.value = saved;
+        // Connexion auto
+        attemptLogin(saved);
+    }
+});
+
+// Toggle visibilité du mot de passe
+toggleEyeBtn.addEventListener('click', () => {
+    adminKeyInput.type = adminKeyInput.type === 'password' ? 'text' : 'password';
+    const icon = toggleEyeBtn.querySelector('ion-icon');
+    if (icon) {
+        icon.setAttribute('name', adminKeyInput.type === 'password' ? 'eye-outline' : 'eye-off-outline');
+    }
+});
+
+loginBtn.addEventListener('click', () => attemptLogin(adminKeyInput.value.trim()));
+adminKeyInput.addEventListener('keydown', e => {
+    if (e.key === 'Enter') attemptLogin(adminKeyInput.value.trim());
+});
+
+async function attemptLogin(key) {
+    if (!key) {
+        loginError.textContent = 'Veuillez entrer votre clé service_role.';
+        loginError.style.display = 'block';
+        return;
+    }
+
+    loginBtn.textContent = 'Connexion…';
+    loginBtn.disabled = true;
+    loginError.style.display = 'none';
+
+    try {
+        adminClient = supabase.createClient(SUPABASE_URL, key);
+
+        // Test d'accès : compter les lignes
+        const { error } = await adminClient
+            .from('waitlist')
+            .select('*', { count: 'exact', head: true });
+
+        if (error) throw new Error(error.message);
+
+        // Succès
+        if (rememberChk.checked) {
+            localStorage.setItem(STORAGE_KEY, key);
+        }
+
+        loginScreen.style.display = 'none';
+        dashScreen.style.display  = 'block';
+        loadData();
+
+    } catch (err) {
+        loginError.textContent = 'Accès refusé. Vérifiez la clé service_role et l\'URL Supabase.';
+        loginError.style.display = 'block';
+    } finally {
+        loginBtn.textContent = 'Accéder au dashboard';
+        loginBtn.disabled = false;
+    }
+}
+
+logoutBtn.addEventListener('click', () => {
+    localStorage.removeItem(STORAGE_KEY);
+    adminClient = null;
+    allData = [];
+    loginScreen.style.display = 'flex';
+    dashScreen.style.display  = 'none';
+    adminKeyInput.value = '';
+});
+
+/* =========================================
+   CHARGEMENT DES DONNÉES
+========================================= */
+async function loadData() {
+    tbody.innerHTML = '<tr class="loading-row"><td colspan="4"><div class="spinner"></div></td></tr>';
+    tableCount.textContent = 'Chargement…';
+
+    try {
+        const { data, error } = await adminClient
+            .from('waitlist')
+            .select('*')
+            .order('created_at', { ascending: false });
+
+        if (error) throw error;
+
+        allData = data || [];
+        updateStats();
+        renderTable();
+        tableTime.textContent = `Dernière mise à jour : ${new Date().toLocaleTimeString('fr-FR')}`;
+
+    } catch (err) {
+        tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;padding:2rem;color:var(--expense);">Erreur : ${err.message}</td></tr>`;
+    }
+}
+
+refreshBtn.addEventListener('click', loadData);
+
+/* =========================================
+   STATISTIQUES
+========================================= */
+function updateStats() {
+    const total    = allData.length;
+    const withEmail = allData.filter(r => r.email).length;
+    const pct      = total > 0 ? Math.round((withEmail / total) * 100) : 0;
+
+    const now      = new Date();
+    const thisMonth = allData.filter(r => {
+        const d = new Date(r.created_at);
+        return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
+    }).length;
+
+    document.getElementById('stat-total').textContent  = total.toLocaleString('fr-FR');
+    document.getElementById('stat-email').textContent  = withEmail.toLocaleString('fr-FR');
+    document.getElementById('stat-email-pct').textContent = `${pct}% des inscrits`;
+    document.getElementById('stat-month').textContent  = thisMonth.toLocaleString('fr-FR');
+    document.getElementById('stat-month-label').textContent = now.toLocaleString('fr-FR', { month: 'long', year: 'numeric' });
+
+    if (allData.length > 0) {
+        const last = allData[0]; // déjà trié par date DESC
+        document.getElementById('stat-last').textContent      = formatDate(last.created_at);
+        document.getElementById('stat-last-name').textContent = `${last.first_name} ${last.last_name}`;
+    }
+}
+
+/* =========================================
+   RENDU DU TABLEAU
+========================================= */
+function renderTable() {
+    let rows = [...allData];
+
+    // Filtre de recherche
+    if (searchTerm) {
+        const q = searchTerm.toLowerCase();
+        rows = rows.filter(r =>
+            (r.first_name || '').toLowerCase().includes(q) ||
+            (r.last_name  || '').toLowerCase().includes(q) ||
+            (r.whatsapp   || '').includes(q) ||
+            (r.email      || '').toLowerCase().includes(q)
+        );
+    }
+
+    // Tri
+    rows.sort((a, b) => {
+        let av = a[sortCol] ?? '';
+        let bv = b[sortCol] ?? '';
+        if (sortCol === 'created_at') {
+            av = new Date(av).getTime();
+            bv = new Date(bv).getTime();
+        } else {
+            av = av.toString().toLowerCase();
+            bv = bv.toString().toLowerCase();
+        }
+        if (av < bv) return sortDir === 'asc' ? -1 : 1;
+        if (av > bv) return sortDir === 'asc' ? 1 : -1;
+        return 0;
+    });
+
+    // Mise à jour entêtes triées
+    document.querySelectorAll('thead th').forEach(th => {
+        th.classList.toggle('sorted', th.dataset.col === sortCol);
+        const icon = th.querySelector('.sort-icon');
+        if (icon && th.dataset.col === sortCol) {
+            icon.setAttribute('name', sortDir === 'asc' ? 'chevron-up-outline' : 'chevron-down-outline');
+        } else if (icon) {
+            icon.setAttribute('name', 'swap-vertical-outline');
+        }
+    });
+
+    if (rows.length === 0) {
+        tbody.innerHTML = `
+            <tr><td colspan="4">
+                <div class="table-empty">
+                    <div class="table-empty-icon"><ion-icon name="mail-unread-outline"></ion-icon></div>
+                    <div class="table-empty-text">${allData.length === 0 ? 'Aucune inscription pour l\'instant.' : 'Aucun résultat pour cette recherche.'}</div>
+                </div>
+            </td></tr>`;
+        tableCount.textContent = '0 résultat';
+        return;
+    }
+
+    tbody.innerHTML = rows.map((r, i) => {
+        const initials = `${(r.first_name || '?')[0]}${(r.last_name || '?')[0]}`.toUpperCase();
+        const emailCell = r.email
+            ? `<span class="cell-email">${escHtml(r.email)}</span>`
+            : `<span class="cell-email empty">—</span>`;
+
+        return `
+            <tr>
+                <td>
+                    <div class="cell-name-wrap">
+                        <div class="avatar-chip">${initials}</div>
+                        <span class="cell-name">${escHtml(r.last_name || '')} ${escHtml(r.first_name || '')}</span>
+                    </div>
+                </td>
+                <td><span class="cell-phone">${escHtml(r.whatsapp || '—')}</span></td>
+                <td>${emailCell}</td>
+                <td><span class="cell-date">${formatDateLong(r.created_at)}</span></td>
+            </tr>`;
+    }).join('');
+
+    tableCount.textContent = `${rows.length} inscrit${rows.length > 1 ? 's' : ''}${searchTerm ? ` (sur ${allData.length})` : ''}`;
+}
+
+/* =========================================
+   RECHERCHE & TRI
+========================================= */
+searchInput.addEventListener('input', e => {
+    searchTerm = e.target.value.trim();
+    renderTable();
+});
+
+sortSelect.addEventListener('change', e => {
+    const [col, dir] = e.target.value.split('-');
+    sortCol = col;
+    sortDir = dir;
+    renderTable();
+});
+
+// Tri par clic sur entête
+document.querySelectorAll('thead th[data-col]').forEach(th => {
+    th.addEventListener('click', () => {
+        const col = th.dataset.col;
+        if (sortCol === col) {
+            sortDir = sortDir === 'asc' ? 'desc' : 'asc';
+        } else {
+            sortCol = col;
+            sortDir = 'asc';
+        }
+        // Sync select
+        sortSelect.value = `${sortCol}-${sortDir}`;
+        renderTable();
+    });
+});
+
+/* =========================================
+   EXPORT CSV
+========================================= */
+exportCsvBtn.addEventListener('click', () => {
+    if (allData.length === 0) return;
+
+    const headers = ['Prénom', 'Nom', 'WhatsApp', 'Email', 'Date d\'inscription'];
+    const rows = allData.map(r => [
+        `"${(r.first_name || '').replace(/"/g, '""')}"`,
+        `"${(r.last_name  || '').replace(/"/g, '""')}"`,
+        `"${(r.whatsapp   || '').replace(/"/g, '""')}"`,
+        `"${(r.email      || '').replace(/"/g, '""')}"`,
+        `"${formatDateLong(r.created_at)}"`,
+    ]);
+
+    const csv = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+    const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href     = url;
+    a.download = `cash-waitlist-${new Date().toISOString().slice(0,10)}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+});
+
+/* =========================================
+   UTILITAIRES
+========================================= */
+function formatDate(iso) {
+    if (!iso) return '—';
+    const d = new Date(iso);
+    const today = new Date();
+    const diff  = Math.floor((today - d) / 86400000);
+    if (diff === 0) return 'Aujourd\'hui';
+    if (diff === 1) return 'Hier';
+    return d.toLocaleDateString('fr-FR', { day: '2-digit', month: 'short' });
+}
+
+function formatDateLong(iso) {
+    if (!iso) return '—';
+    return new Date(iso).toLocaleString('fr-FR', {
+        day: '2-digit', month: 'short', year: 'numeric',
+        hour: '2-digit', minute: '2-digit'
+    });
+}
+
+function escHtml(str) {
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+}
+</script>
+</body>
+</html>
