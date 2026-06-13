@@ -717,7 +717,12 @@ async function attemptLogin(key) {
     loginError.style.display = 'none';
 
     try {
-        adminClient = supabase.createClient(SUPABASE_URL, key);
+        adminClient = supabase.createClient(SUPABASE_URL, key, {
+            auth: {
+                persistSession: false,
+                autoRefreshToken: false
+            }
+        });
 
         // Test d'accès : compter les lignes
         const { error } = await adminClient
