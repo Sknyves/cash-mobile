@@ -729,7 +729,7 @@ async function attemptLogin(key) {
             .from('waitlist')
             .select('*', { count: 'exact', head: true });
 
-        if (error) throw new Error(error.message);
+        if (error) throw error;
 
         // Succès
         if (rememberChk.checked) {
@@ -742,7 +742,14 @@ async function attemptLogin(key) {
 
     } catch (err) {
         console.error("Erreur de connexion Supabase :", err);
-        loginError.textContent = 'Accès refusé. Vérifiez la clé service_role et l\'URL Supabase.';
+        // Afficher plus de détails pour le diagnostic
+        const status = err?.status || err?.statusCode || '';
+        const code = err?.code || '';
+        const details = err?.details || err?.message || '';
+        console.error('Supabase error details:', { status, code, details, err });
+
+        loginError.textContent = `Accès refusé. Vérifiez la clé service_role et l'URL Supabase. (${status} ${code})`;
+        loginError.title = details ? String(details) : '';
         loginError.style.display = 'block';
     } finally {
         loginBtn.textContent = 'Accéder au dashboard';
