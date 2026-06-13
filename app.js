@@ -99,7 +99,7 @@ const clearError = (inputEl, errorEl) => {
 };
 
 const isValidEmail = email => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.toLowerCase());
-const isValidPhone = phone => phone.replace(/[\s\-().+]/g, '').length >= 6;
+const isValidPhone = phone => phone.replace(/[\s\-().+]/g, '').length >= 8;
 
 // Attacher les listeners de nettoyage
 window.addEventListener('DOMContentLoaded', () => {
@@ -129,7 +129,9 @@ if (form) {
 
         const firstNameVal   = $('waitlist-firstname').value.trim();
         const lastNameVal    = $('waitlist-lastname').value.trim();
-        const whatsappVal    = $('waitlist-whatsapp').value.trim();
+        const countryCode     = $('phone-country-code')?.value || '';
+        const phoneRaw        = $('waitlist-whatsapp').value.trim();
+        const whatsappVal     = phoneRaw ? countryCode + phoneRaw : '';
         const emailVal       = $('waitlist-email').value.trim();
         const generalErrEl   = $('form-error-general');
 
@@ -145,7 +147,8 @@ if (form) {
             valid = false;
         }
         if (!whatsappVal || !isValidPhone(whatsappVal)) {
-            showError($('waitlist-whatsapp'), $('error-whatsapp'), 'Veuillez entrer un numéro WhatsApp valide.');
+            const wrap = document.querySelector('.phone-input-wrap') || $('waitlist-whatsapp');
+            showError(wrap, $('error-whatsapp'), 'Veuillez entrer un numéro WhatsApp valide.');
             valid = false;
         }
         // Email optionnel : valider seulement s'il est rempli

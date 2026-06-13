@@ -205,7 +205,41 @@
                         
                         <div class="form-group">
                             <label for="waitlist-whatsapp">Votre numéro WhatsApp</label>
-                            <input type="tel" id="waitlist-whatsapp" placeholder="Ex: +225 0707070707" required>
+                            <div class="phone-input-wrap">
+                                <select id="phone-country-code" class="phone-country-select" aria-label="Indicatif pays">
+                                    <option value="+229" selected>🇧🇯 +229</option>
+                                    <option value="+225">🇨🇮 +225</option>
+                                    <option value="+33">🇫🇷 +33</option>
+                                    <option value="+1">🇺🇸 +1</option>
+                                    <option value="+44">🇬🇧 +44</option>
+                                    <option value="+32">🇧🇪 +32</option>
+                                    <option value="+41">🇨🇭 +41</option>
+                                    <option value="+49">🇩🇪 +49</option>
+                                    <option value="+212">🇲🇦 +212</option>
+                                    <option value="+213">🇩🇿 +213</option>
+                                    <option value="+216">🇹🇳 +216</option>
+                                    <option value="+221">🇸🇳 +221</option>
+                                    <option value="+223">🇲🇱 +223</option>
+                                    <option value="+224">🇬🇳 +224</option>
+                                    <option value="+226">🇧🇫 +226</option>
+                                    <option value="+227">🇳🇪 +227</option>
+                                    <option value="+228">🇹🇬 +228</option>
+                                    <option value="+230">🇲🇺 +230</option>
+                                    <option value="+233">🇬🇭 +233</option>
+                                    <option value="+234">🇳🇬 +234</option>
+                                    <option value="+237">🇨🇲 +237</option>
+                                    <option value="+241">🇬🇦 +241</option>
+                                    <option value="+242">🇨🇬 +242</option>
+                                    <option value="+243">🇨🇩 +243</option>
+                                    <option value="+245">🇬🇼 +245</option>
+                                    <option value="+248">🇸🇨 +248</option>
+                                    <option value="+254">🇰🇪 +254</option>
+                                    <option value="+261">🇲🇬 +261</option>
+                                    <option value="+269">🇰🇲 +269</option>
+                                    <option value="+27">🇿🇦 +27</option>
+                                </select>
+                                <input type="tel" id="waitlist-whatsapp" placeholder="01 02 03 04 05" required>
+                            </div>
                             <span class="error-message" id="error-whatsapp">Un numéro WhatsApp valide est requis.</span>
                         </div>
                         

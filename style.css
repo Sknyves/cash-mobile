@@ -662,6 +662,51 @@ a {
     box-shadow: 0 0 0 4px rgba(26, 26, 26, 0.05);
 }
 
+/* Phone country picker */
+.phone-input-wrap {
+    display: flex;
+    gap: 0;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border);
+    background-color: var(--bg);
+    overflow: hidden;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.phone-input-wrap:focus-within {
+    border-color: var(--text);
+    background-color: var(--surface);
+    box-shadow: 0 0 0 4px rgba(26, 26, 26, 0.05);
+}
+
+.phone-country-select {
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    font-weight: 600;
+    padding: 1rem 0.75rem;
+    border: none;
+    border-right: 1px solid var(--border);
+    background-color: var(--surface-alt);
+    color: var(--text);
+    outline: none;
+    cursor: pointer;
+    flex-shrink: 0;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24'%3E%3Cpath fill='%237A7A7A' d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 6px center;
+    padding-right: 22px;
+}
+
+.phone-input-wrap input {
+    border: none !important;
+    border-radius: 0 !important;
+    background-color: transparent !important;
+    box-shadow: none !important;
+    flex: 1;
+}
+
 .error-message {
     font-size: 0.8rem;
     font-weight: 600;
