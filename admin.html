@@ -404,6 +404,18 @@
 
     .cell-name { font-weight: 700; color: var(--text); }
     .cell-phone { font-family: monospace; font-size: .85rem; }
+    .cell-phone-link {
+        font-family: monospace;
+        font-size: .85rem;
+        color: #25D366;
+        font-weight: 700;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: .3rem;
+        transition: opacity .15s;
+    }
+    .cell-phone-link:hover { opacity: .75; text-decoration: underline; }
     .cell-email { font-size: .85rem; color: var(--sub); }
     .cell-email.empty { color: var(--light); font-style: italic; }
     .cell-date { font-size: .8rem; color: var(--sub); white-space: nowrap; }
@@ -890,7 +902,7 @@ function renderTable() {
                         <span class="cell-name">${escHtml(r.last_name || '')} ${escHtml(r.first_name || '')}</span>
                     </div>
                 </td>
-                <td><span class="cell-phone">${escHtml(r.whatsapp || '—')}</span></td>
+                <td>${formatWhatsApp(r.whatsapp)}</td>
                 <td>${emailCell}</td>
                 <td><span class="cell-date">${formatDateLong(r.created_at)}</span></td>
             </tr>`;
@@ -974,6 +986,20 @@ function formatDateLong(iso) {
         day: '2-digit', month: 'short', year: 'numeric',
         hour: '2-digit', minute: '2-digit'
     });
+}
+
+function formatWhatsApp(phone) {
+    if (!phone) return `<span class="cell-phone">—</span>`;
+    // Nettoyer : garder uniquement chiffres et '+'
+    let clean = phone.replace(/[^\d+]/g, '');
+    // Si le numéro commence par 0, supposer préfixe France (+33)
+    if (clean.startsWith('0')) clean = '+33' + clean.slice(1);
+    // Construire lien wa.me
+    const waUrl = `https://wa.me/${clean.replace('+', '')}`;
+    return `<a href="${waUrl}" target="_blank" rel="noopener noreferrer" class="cell-phone-link" title="Ouvrir WhatsApp">
+        <ion-icon name="logo-whatsapp"></ion-icon>
+        ${escHtml(phone)}
+    </a>`;
 }
 
 function escHtml(str) {
