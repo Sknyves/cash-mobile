@@ -993,7 +993,7 @@ function formatWhatsApp(phone) {
     // Nettoyer : garder uniquement chiffres et '+'
     let clean = phone.replace(/[^\d+]/g, '');
     // Si le numéro commence par 0, supposer préfixe Bénin (+229)
-    if (clean.startsWith('0')) clean = '+229' + clean.slice(1);
+    if (clean.startsWith('0')) clean = '+2290' + clean.slice(1);
     // Construire lien wa.me
     const waUrl = `https://wa.me/${clean.replace('+', '')}`;
     return `<a href="${waUrl}" target="_blank" rel="noopener noreferrer" class="cell-phone-link" title="Ouvrir WhatsApp">
