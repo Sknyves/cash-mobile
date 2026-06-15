@@ -488,6 +488,196 @@
         .dash-title { font-size: 1.35rem; }
         .btn span { display: none; }
     }
+
+    /* =========================================
+       MODAL WHATSAPP
+    ========================================= */
+    .modal-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.45);
+        z-index: 200;
+        align-items: center;
+        justify-content: center;
+        padding: 1rem;
+        backdrop-filter: blur(4px);
+    }
+    .modal-overlay.open { display: flex; }
+
+    .modal-card {
+        background: var(--surface);
+        border-radius: var(--r-lg);
+        box-shadow: 0 24px 64px rgba(0,0,0,0.18);
+        width: 100%;
+        max-width: 560px;
+        max-height: 90vh;
+        overflow-y: auto;
+        animation: modal-in 0.2s ease;
+    }
+    @keyframes modal-in {
+        from { opacity:0; transform:scale(0.96) translateY(8px); }
+        to   { opacity:1; transform:scale(1)   translateY(0); }
+    }
+
+    .modal-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1.5rem 1.75rem 1.25rem;
+        border-bottom: 1px solid var(--border);
+    }
+    .modal-title {
+        font-family: var(--font-h);
+        font-size: 1.15rem;
+        font-weight: 800;
+        letter-spacing: -.4px;
+        display: flex;
+        align-items: center;
+        gap: .6rem;
+    }
+    .modal-title-icon {
+        width: 34px; height: 34px;
+        background: #E7F9EE;
+        border-radius: 10px;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1.1rem;
+        color: #25D366;
+    }
+    .modal-close {
+        background: var(--alt);
+        border: none;
+        border-radius: 8px;
+        width: 32px; height: 32px;
+        cursor: pointer;
+        display: flex; align-items: center; justify-content: center;
+        color: var(--sub);
+        font-size: 1.1rem;
+        transition: background .15s;
+    }
+    .modal-close:hover { background: var(--border); color: var(--text); }
+
+    .modal-body { padding: 1.5rem 1.75rem; }
+
+    .modal-label {
+        display: block;
+        font-size: .75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: .5px;
+        color: var(--sub);
+        margin-bottom: .5rem;
+    }
+
+    .modal-textarea {
+        width: 100%;
+        font-family: var(--font-b);
+        font-size: .9rem;
+        line-height: 1.6;
+        padding: .9rem 1.1rem;
+        border: 1px solid var(--border);
+        border-radius: var(--r-md);
+        background: var(--bg);
+        color: var(--text);
+        resize: vertical;
+        min-height: 130px;
+        outline: none;
+        transition: border-color .2s, box-shadow .2s;
+    }
+    .modal-textarea:focus { border-color: #25D366; box-shadow: 0 0 0 3px rgba(37,211,102,.1); }
+
+    .modal-preview-box {
+        margin-top: 1rem;
+        background: #E7F9EE;
+        border-radius: var(--r-md);
+        padding: 1rem 1.25rem;
+        font-size: .88rem;
+        line-height: 1.65;
+        color: #1A1A1A;
+        white-space: pre-wrap;
+        word-break: break-word;
+        border: 1px solid rgba(37,211,102,.25);
+    }
+    .modal-preview-label {
+        font-size: .7rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: .5px;
+        color: #25D366;
+        margin-bottom: .5rem;
+        display: flex;
+        align-items: center;
+        gap: .35rem;
+    }
+
+    .modal-recipients {
+        margin-top: 1.25rem;
+        background: var(--alt);
+        border-radius: var(--r-md);
+        padding: .85rem 1.1rem;
+        display: flex;
+        align-items: center;
+        gap: .75rem;
+        font-size: .88rem;
+    }
+    .recipients-count {
+        font-family: var(--font-h);
+        font-size: 1.4rem;
+        font-weight: 900;
+        color: var(--text);
+        line-height: 1;
+    }
+    .recipients-label { color: var(--sub); font-size: .8rem; font-weight: 600; }
+
+    .modal-progress {
+        margin-top: 1.25rem;
+        display: none;
+    }
+    .modal-progress.visible { display: block; }
+    .progress-bar-bg {
+        height: 6px;
+        background: var(--border);
+        border-radius: 3px;
+        overflow: hidden;
+        margin-top: .5rem;
+    }
+    .progress-bar-fill {
+        height: 100%;
+        background: #25D366;
+        border-radius: 3px;
+        transition: width .3s ease;
+    }
+    .progress-text {
+        font-size: .8rem;
+        color: var(--sub);
+        font-weight: 600;
+    }
+
+    .modal-footer {
+        padding: 1.25rem 1.75rem 1.75rem;
+        display: flex;
+        gap: .75rem;
+        justify-content: flex-end;
+        border-top: 1px solid var(--border);
+    }
+
+    .btn-whatsapp {
+        background: #25D366;
+        color: #fff;
+        font-size: .9rem;
+        padding: .7rem 1.5rem;
+    }
+    .btn-whatsapp:hover { background: #1ebe5d; transform: translateY(-1px); }
+    .btn-whatsapp:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+
+    .modal-info-note {
+        margin-top: 1rem;
+        font-size: .78rem;
+        color: var(--light);
+        line-height: 1.5;
+        display: flex;
+        gap: .4rem;
+    }
     </style>
 </head>
 <body>
@@ -552,6 +742,9 @@
                 <span class="badge-admin">ADMIN</span>
             </div>
             <div class="dash-header-actions">
+                <button class="btn btn-whatsapp" id="whatsapp-broadcast-btn" style="border-radius:99px;">
+                    <ion-icon name="logo-whatsapp"></ion-icon> <span>Notifier via WhatsApp</span>
+                </button>
                 <button class="btn btn-success" id="export-csv-btn">
                     <ion-icon name="download-outline"></ion-icon> <span>Exporter CSV</span>
                 </button>
@@ -647,6 +840,80 @@
         </div>
 
     </main>
+</div>
+
+<!-- ==========================================
+     MODAL WHATSAPP BROADCAST
+========================================== -->
+<div class="modal-overlay" id="wa-modal">
+    <div class="modal-card">
+        <div class="modal-header">
+            <div class="modal-title">
+                <div class="modal-title-icon"><ion-icon name="logo-whatsapp"></ion-icon></div>
+                Notification WhatsApp
+            </div>
+            <button class="modal-close" id="wa-modal-close"><ion-icon name="close-outline"></ion-icon></button>
+        </div>
+
+        <div class="modal-body">
+
+            <label class="modal-label" for="wa-message">Message à envoyer</label>
+            <textarea
+                id="wa-message"
+                class="modal-textarea"
+                placeholder="Écrivez votre message ici..."
+            >🔔 *Cash — Mise à jour disponible*
+
+Bonjour {prenom} 👋
+
+Une nouvelle version de l'application *Cash* est disponible !
+
+📲 Téléchargez-la ici :
+https://cash.vercel.app/cash.apk
+
+Merci de votre confiance 🙏</textarea>
+
+            <div style="margin-top:1rem;">
+                <div class="modal-preview-label">
+                    <ion-icon name="eye-outline"></ion-icon> Aperçu (avec le 1er contact)
+                </div>
+                <div class="modal-preview-box" id="wa-preview"></div>
+            </div>
+
+            <div class="modal-recipients">
+                <div>
+                    <div class="recipients-count" id="wa-recipient-count">—</div>
+                    <div class="recipients-label">destinataires</div>
+                </div>
+                <div style="width:1px;height:36px;background:var(--border);"></div>
+                <div style="font-size:.82rem;color:var(--sub);line-height:1.5;">
+                    Tous les inscrits avec un numéro WhatsApp.<br>
+                    Chaque lien s'ouvrira avec <strong>3 secondes d'intervalle</strong>.
+                </div>
+            </div>
+
+            <div class="modal-info-note">
+                <ion-icon name="information-circle-outline" style="flex-shrink:0;font-size:1rem;"></ion-icon>
+                <span>WhatsApp s'ouvre dans un nouvel onglet pour chaque contact. Vous devez cliquer « Envoyer » manuellement dans chaque onglet. Autorisez les popups si votre navigateur les bloque.</span>
+            </div>
+
+            <div class="modal-progress" id="wa-progress">
+                <div class="progress-text" id="wa-progress-text">Ouverture 0 / 0…</div>
+                <div class="progress-bar-bg">
+                    <div class="progress-bar-fill" id="wa-progress-fill" style="width:0%"></div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="modal-footer">
+            <button class="btn btn-outline" id="wa-cancel-btn">Annuler</button>
+            <button class="btn btn-whatsapp" id="wa-send-btn">
+                <ion-icon name="send-outline"></ion-icon>
+                <span>Ouvrir les liens WhatsApp</span>
+            </button>
+        </div>
+    </div>
 </div>
 
 <!-- Ionicons -->
@@ -1009,6 +1276,124 @@ function escHtml(str) {
         .replace(/>/g, '&gt;')
         .replace(/"/g, '&quot;');
 }
+
+/* =========================================
+   WHATSAPP BROADCAST
+========================================= */
+const waModal         = document.getElementById('wa-modal');
+const waModalClose    = document.getElementById('wa-modal-close');
+const waCancelBtn     = document.getElementById('wa-cancel-btn');
+const waSendBtn       = document.getElementById('wa-send-btn');
+const waMessage       = document.getElementById('wa-message');
+const waPreview       = document.getElementById('wa-preview');
+const waRecipCount    = document.getElementById('wa-recipient-count');
+const waProgress      = document.getElementById('wa-progress');
+const waProgressText  = document.getElementById('wa-progress-text');
+const waProgressFill  = document.getElementById('wa-progress-fill');
+const waBroadcastBtn  = document.getElementById('whatsapp-broadcast-btn');
+
+// Ouvrir la modal
+waBroadcastBtn.addEventListener('click', () => {
+    if (allData.length === 0) {
+        alert('Chargez d\'abord les données (cliquez sur Actualiser).');
+        return;
+    }
+    const recipients = getRecipients();
+    waRecipCount.textContent = recipients.length;
+    updatePreview();
+    waProgress.classList.remove('visible');
+    waProgressFill.style.width = '0%';
+    waSendBtn.disabled = false;
+    waSendBtn.innerHTML = '<ion-icon name="send-outline"></ion-icon> <span>Ouvrir les liens WhatsApp</span>';
+    waModal.classList.add('open');
+});
+
+// Fermer la modal
+[waModalClose, waCancelBtn].forEach(el => {
+    el.addEventListener('click', () => waModal.classList.remove('open'));
+});
+waModal.addEventListener('click', e => {
+    if (e.target === waModal) waModal.classList.remove('open');
+});
+
+// Aperçu en temps réel
+waMessage.addEventListener('input', updatePreview);
+
+function getRecipients() {
+    return allData.filter(r => r.whatsapp && r.whatsapp.trim().length > 0);
+}
+
+function buildMessage(template, contact) {
+    return template
+        .replace(/{prenom}/gi, contact.first_name || 'cher(e) utilisateur')
+        .replace(/{nom}/gi, contact.last_name || '')
+        .replace(/{nom_complet}/gi, `${contact.first_name || ''} ${contact.last_name || ''}`.trim());
+}
+
+function updatePreview() {
+    const recipients = getRecipients();
+    const sample = recipients[0] || { first_name: 'Prénom', last_name: 'Nom' };
+    const msg = buildMessage(waMessage.value, sample);
+    waPreview.textContent = msg;
+    waRecipCount.textContent = recipients.length;
+}
+
+function cleanPhone(phone) {
+    let clean = phone.replace(/[^\d+]/g, '');
+    if (clean.startsWith('0')) clean = '+229' + clean.slice(1);
+    return clean.replace('+', '');
+}
+
+// Envoi en cascade
+waSendBtn.addEventListener('click', async () => {
+    const recipients = getRecipients();
+    if (recipients.length === 0) {
+        alert('Aucun destinataire avec numéro WhatsApp.');
+        return;
+    }
+
+    const template = waMessage.value.trim();
+    if (!template) {
+        alert('Le message est vide.');
+        return;
+    }
+
+    const confirmed = confirm(
+        `Vous allez ouvrir ${recipients.length} onglet(s) WhatsApp.\n` +
+        `Assurez-vous d'autoriser les popups dans votre navigateur.\n\nContinuer ?`
+    );
+    if (!confirmed) return;
+
+    waSendBtn.disabled = true;
+    waSendBtn.innerHTML = '<div class="spinner" style="border-top-color:#fff;width:16px;height:16px;"></div> <span>Envoi en cours...</span>';
+    waProgress.classList.add('visible');
+
+    const DELAY_MS = 3000; // 3 secondes entre chaque onglet
+    let sent = 0;
+
+    for (const contact of recipients) {
+        const msg     = buildMessage(template, contact);
+        const phone   = cleanPhone(contact.whatsapp);
+        const encoded = encodeURIComponent(msg);
+        const url     = `https://web.whatsapp.com/send?phone=${phone}&text=${encoded}`;
+
+        window.open(url, '_blank');
+        sent++;
+
+        // Mise à jour barre de progression
+        const pct = Math.round((sent / recipients.length) * 100);
+        waProgressFill.style.width = pct + '%';
+        waProgressText.textContent = `Ouverture ${sent} / ${recipients.length}…`;
+
+        if (sent < recipients.length) {
+            await new Promise(r => setTimeout(r, DELAY_MS));
+        }
+    }
+
+    waProgressText.textContent = `✅ ${sent} onglet(s) ouvert(s) — vérifiez chaque onglet WhatsApp pour envoyer.`;
+    waProgressFill.style.width = '100%';
+    waSendBtn.innerHTML = '<ion-icon name="checkmark-outline"></ion-icon> <span>Terminé</span>';
+});
 </script>
 </body>
 </html>
