@@ -678,6 +678,71 @@
         display: flex;
         gap: .4rem;
     }
+
+    /* =========================================
+       TABS NAVIGATION
+    ========================================= */
+    .tab-nav {
+        display: flex;
+        gap: 1.5rem;
+        border-bottom: 1px solid var(--border);
+        margin-bottom: 2rem;
+    }
+    .tab-link {
+        background: none;
+        border: none;
+        font-family: var(--font-h);
+        font-size: 1rem;
+        font-weight: 700;
+        color: var(--sub);
+        padding: 0.85rem 0.5rem;
+        cursor: pointer;
+        position: relative;
+        transition: color .2s;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        outline: none;
+    }
+    .tab-link:hover { color: var(--text); }
+    .tab-link.active { color: var(--text); }
+    .tab-link.active::after {
+        content: '';
+        position: absolute;
+        bottom: -1px;
+        left: 0;
+        right: 0;
+        height: 2.5px;
+        background: var(--text);
+        border-radius: 99px;
+    }
+
+    /* =========================================
+       BADGES TÉLÉMÉTRIE
+    ========================================= */
+    .badge-evt {
+        display: inline-block;
+        font-size: .75rem;
+        font-weight: 700;
+        padding: .25rem .6rem;
+        border-radius: var(--r-sm);
+        text-transform: lowercase;
+    }
+    .badge-evt-default { background: var(--alt); color: var(--sub); }
+    .badge-evt-expense { background: var(--expense-bg); color: var(--expense); }
+    .badge-evt-income { background: var(--income-bg); color: var(--income); }
+    .badge-evt-open { background: #EBF5FB; color: #2980B9; }
+    .badge-evt-reset { background: #FDEDEC; color: #C0392B; }
+
+    .badge-prop {
+        display: inline-block;
+        font-size: .72rem;
+        padding: .15rem .45rem;
+        border-radius: 4px;
+        border: 1px solid var(--border);
+    }
+    .badge-prop-neutral { background: var(--surface); color: var(--sub); }
+    .badge-prop-category { background: #FCF3CF; color: #B7950B; border-color: rgba(183,149,11,0.2); }
     </style>
 </head>
 <body>
@@ -760,82 +825,220 @@
 
     <main class="dash-body">
 
-        <!-- Titre -->
-        <div class="dash-title-row">
-            <div>
-                <h1 class="dash-title">Liste des inscrits</h1>
-                <p class="dash-sub">Tous les utilisateurs ayant rejoint la liste d'attente pour tester Cash.</p>
+        <!-- Tab Navigation -->
+        <div class="tab-nav">
+            <button class="tab-link active" id="btn-tab-waitlist">
+                <ion-icon name="people-outline"></ion-icon> <span>Liste d'attente</span>
+            </button>
+            <button class="tab-link" id="btn-tab-analytics">
+                <ion-icon name="analytics-outline"></ion-icon> <span>Télémétrie & Événements</span>
+            </button>
+        </div>
+
+        <!-- Section Waitlist -->
+        <div id="section-waitlist">
+            <!-- Titre -->
+            <div class="dash-title-row">
+                <div>
+                    <h1 class="dash-title">Liste des inscrits</h1>
+                    <p class="dash-sub">Tous les utilisateurs ayant rejoint la liste d'attente pour tester Cash.</p>
+                </div>
+            </div>
+
+            <!-- Stats -->
+            <div class="stats-grid" id="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label"><ion-icon name="people-outline" class="stat-icon"></ion-icon> Total inscrits</div>
+                    <div class="stat-value" id="stat-total">—</div>
+                    <div class="stat-detail">Depuis le lancement</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label"><ion-icon name="mail-outline" class="stat-icon"></ion-icon> Avec e-mail</div>
+                    <div class="stat-value" id="stat-email">—</div>
+                    <div class="stat-detail" id="stat-email-pct">—</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label"><ion-icon name="calendar-outline" class="stat-icon"></ion-icon> Dernière inscription</div>
+                    <div class="stat-value" style="font-size:1.3rem;" id="stat-last">—</div>
+                    <div class="stat-detail" id="stat-last-name">—</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label"><ion-icon name="trending-up-outline" class="stat-icon"></ion-icon> Ce mois-ci</div>
+                    <div class="stat-value" id="stat-month">—</div>
+                    <div class="stat-detail" id="stat-month-label">—</div>
+                </div>
+            </div>
+
+            <!-- Toolbar -->
+            <div class="table-toolbar">
+                <div class="search-wrap">
+                    <ion-icon name="search-outline" class="search-icon"></ion-icon>
+                    <input
+                        type="text"
+                        id="search-input"
+                        class="search-input"
+                        placeholder="Rechercher par nom, prénom, WhatsApp ou e-mail..."
+                    >
+                </div>
+                <select id="sort-select" class="filter-select">
+                    <option value="created_at-desc">Plus récent d'abord</option>
+                    <option value="created_at-asc">Plus ancien d'abord</option>
+                    <option value="last_name-asc">Nom A → Z</option>
+                    <option value="last_name-desc">Nom Z → A</option>
+                    <option value="first_name-asc">Prénom A → Z</option>
+                </select>
+            </div>
+
+            <!-- Tableau -->
+            <div class="table-card">
+                <div class="table-wrap">
+                    <table id="waitlist-table">
+                        <thead>
+                            <tr>
+                                <th data-col="last_name">#&nbsp;&nbsp;Nom complet <ion-icon name="swap-vertical-outline" class="sort-icon"></ion-icon></th>
+                                <th data-col="whatsapp">WhatsApp <ion-icon name="swap-vertical-outline" class="sort-icon"></ion-icon></th>
+                                <th data-col="email">E-mail <ion-icon name="swap-vertical-outline" class="sort-icon"></ion-icon></th>
+                                <th data-col="created_at">Date d'inscription <ion-icon name="swap-vertical-outline" class="sort-icon"></ion-icon></th>
+                            </tr>
+                        </thead>
+                        <tbody id="waitlist-tbody">
+                            <tr class="loading-row">
+                                <td colspan="4">
+                                    <div class="spinner"></div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="table-footer">
+                    <span id="table-count">Chargement...</span>
+                    <span id="table-time">—</span>
+                </div>
             </div>
         </div>
 
-        <!-- Stats -->
-        <div class="stats-grid" id="stats-grid">
-            <div class="stat-card">
-                <div class="stat-label"><ion-icon name="people-outline" class="stat-icon"></ion-icon> Total inscrits</div>
-                <div class="stat-value" id="stat-total">—</div>
-                <div class="stat-detail">Depuis le lancement</div>
+        <!-- Section Analytics -->
+        <div id="section-analytics" style="display: none;">
+            <!-- Titre -->
+            <div class="dash-title-row">
+                <div>
+                    <h1 class="dash-title">Télémétrie de l'application</h1>
+                    <p class="dash-sub">Suivi des événements d'utilisation et d'adoption de Cash en temps réel.</p>
+                </div>
             </div>
-            <div class="stat-card">
-                <div class="stat-label"><ion-icon name="mail-outline" class="stat-icon"></ion-icon> Avec e-mail</div>
-                <div class="stat-value" id="stat-email">—</div>
-                <div class="stat-detail" id="stat-email-pct">—</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-label"><ion-icon name="calendar-outline" class="stat-icon"></ion-icon> Dernière inscription</div>
-                <div class="stat-value" style="font-size:1.3rem;" id="stat-last">—</div>
-                <div class="stat-detail" id="stat-last-name">—</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-label"><ion-icon name="trending-up-outline" class="stat-icon"></ion-icon> Ce mois-ci</div>
-                <div class="stat-value" id="stat-month">—</div>
-                <div class="stat-detail" id="stat-month-label">—</div>
-            </div>
-        </div>
 
-        <!-- Toolbar -->
-        <div class="table-toolbar">
-            <div class="search-wrap">
-                <ion-icon name="search-outline" class="search-icon"></ion-icon>
-                <input
-                    type="text"
-                    id="search-input"
-                    class="search-input"
-                    placeholder="Rechercher par nom, prénom, WhatsApp ou e-mail..."
-                >
+            <!-- Stats -->
+            <div class="stats-grid" id="analytics-stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label"><ion-icon name="finger-print-outline" class="stat-icon"></ion-icon> Appareils actifs</div>
+                    <div class="stat-value" id="stat-active-devices">—</div>
+                    <div class="stat-detail">Identifiants uniques</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label"><ion-icon name="flash-outline" class="stat-icon"></ion-icon> Total Événements</div>
+                    <div class="stat-value" id="stat-total-events">—</div>
+                    <div class="stat-detail">Transmis par les téléphones</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label"><ion-icon name="trending-down-outline" class="stat-icon"></ion-icon> Dépenses ajoutées</div>
+                    <div class="stat-value" id="stat-expense-events">—</div>
+                    <div class="stat-detail" id="stat-expense-detail">—</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label"><ion-icon name="trending-up-outline" class="stat-icon"></ion-icon> Revenus ajoutés</div>
+                    <div class="stat-value" id="stat-income-events">—</div>
+                    <div class="stat-detail" id="stat-income-detail">—</div>
+                </div>
             </div>
-            <select id="sort-select" class="filter-select">
-                <option value="created_at-desc">Plus récent d'abord</option>
-                <option value="created_at-asc">Plus ancien d'abord</option>
-                <option value="last_name-asc">Nom A → Z</option>
-                <option value="last_name-desc">Nom Z → A</option>
-                <option value="first_name-asc">Prénom A → Z</option>
-            </select>
-        </div>
 
-        <!-- Tableau -->
-        <div class="table-card">
-            <div class="table-wrap">
-                <table id="waitlist-table">
-                    <thead>
-                        <tr>
-                            <th data-col="last_name">#&nbsp;&nbsp;Nom complet <ion-icon name="swap-vertical-outline" class="sort-icon"></ion-icon></th>
-                            <th data-col="whatsapp">WhatsApp <ion-icon name="swap-vertical-outline" class="sort-icon"></ion-icon></th>
-                            <th data-col="email">E-mail <ion-icon name="swap-vertical-outline" class="sort-icon"></ion-icon></th>
-                            <th data-col="created_at">Date d'inscription <ion-icon name="swap-vertical-outline" class="sort-icon"></ion-icon></th>
-                        </tr>
-                    </thead>
-                    <tbody id="waitlist-tbody">
-                        <tr class="loading-row">
-                            <td colspan="4">
-                                <div class="spinner"></div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+            <!-- Setup Fallback -->
+            <div id="analytics-sql-setup" style="display: none; background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-md); padding: 2.5rem; box-shadow: var(--shadow-sm); margin-bottom: 2rem;">
+                <div style="display: flex; gap: 1.25rem; align-items: flex-start; margin-bottom: 1.5rem;">
+                    <div style="width: 48px; height: 48px; background: var(--warning-bg); color: var(--warning); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; flex-shrink: 0;">
+                        <ion-icon name="warning-outline"></ion-icon>
+                    </div>
+                    <div>
+                        <h3 style="font-family: var(--font-h); font-size: 1.25rem; font-weight: 800; margin-bottom: 0.25rem;">Table de télémétrie non configurée</h3>
+                        <p style="color: var(--sub); font-size: 0.9rem; line-height: 1.5;">La table <code>analytics_events</code> n'existe pas encore dans votre base de données Supabase. Pour activer le tableau de bord de télémétrie, veuillez copier et exécuter le script SQL suivant dans l'éditeur SQL de votre console Supabase.</p>
+                    </div>
+                </div>
+                
+                <div style="position: relative; margin-bottom: 1.5rem;">
+                    <pre style="background: #1A1A1A; color: #E8E8E2; font-family: monospace; font-size: 0.85rem; padding: 1.25rem; border-radius: var(--r-md); overflow-x: auto; max-height: 350px; line-height: 1.5;" id="sql-code-block">-- 1. Créer la table pour la télémétrie
+CREATE TABLE IF NOT EXISTS analytics_events (
+  id BIGINT GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
+  device_id TEXT NOT NULL,
+  event_name TEXT NOT NULL,
+  properties JSONB DEFAULT '{}'::jsonb,
+  created_at TIMESTAMP WITH TIME ZONE NOT NULL
+);
+
+-- 2. Activer Row Level Security (RLS)
+ALTER TABLE analytics_events ENABLE ROW LEVEL SECURITY;
+
+-- 3. Créer la politique pour autoriser l'insertion anonyme depuis l'application
+CREATE POLICY "Allow anon insert" ON analytics_events
+  FOR INSERT TO anon WITH CHECK (true);
+
+-- 4. Créer la politique de lecture pour la clé d'administration
+CREATE POLICY "Allow read for service_role" ON analytics_events
+  FOR SELECT TO service_role USING (true);</pre>
+                    <button class="btn btn-outline" onclick="copySqlCode()" style="position: absolute; top: 0.75rem; right: 0.75rem; font-size: 0.75rem; padding: 0.4rem 0.8rem; background: rgba(255,255,255,0.15); color: #fff; border-color: rgba(255,255,255,0.25);">
+                        <ion-icon name="copy-outline"></ion-icon> Copier le SQL
+                    </button>
+                </div>
+                
+                <p style="font-size: 0.82rem; color: var(--light); line-height: 1.5;">Une fois le script SQL exécuté, cliquez sur "Actualiser" ci-dessus pour charger les données.</p>
             </div>
-            <div class="table-footer">
-                <span id="table-count">Chargement...</span>
-                <span id="table-time">—</span>
+
+            <!-- Toolbar -->
+            <div class="table-toolbar">
+                <div class="search-wrap">
+                    <ion-icon name="search-outline" class="search-icon"></ion-icon>
+                    <input
+                        type="text"
+                        id="analytics-search-input"
+                        class="search-input"
+                        placeholder="Rechercher par événement ou identifiant d'appareil..."
+                    >
+                </div>
+                <select id="analytics-event-filter" class="filter-select">
+                    <option value="all">Tous les événements</option>
+                    <option value="app_open">Ouverture (app_open)</option>
+                    <option value="add_expense">Ajout dépense (add_expense)</option>
+                    <option value="add_income">Ajout revenu (add_income)</option>
+                    <option value="edit_transaction">Modif transaction (edit_transaction)</option>
+                    <option value="delete_transaction">Suppr transaction (delete_transaction)</option>
+                    <option value="create_portfolio_open">Création portefeuille (create_portfolio_open)</option>
+                    <option value="add_transaction_open">Ouverture formulaire (add_transaction_open)</option>
+                    <option value="reset_data">Réinitialisation (reset_data)</option>
+                </select>
+            </div>
+
+            <!-- Tableau -->
+            <div class="table-card">
+                <div class="table-wrap">
+                    <table id="analytics-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 200px;">Date & Heure</th>
+                                <th style="width: 200px;">Appareil (ID)</th>
+                                <th style="width: 200px;">Événement</th>
+                                <th>Propriétés / Détails</th>
+                            </tr>
+                        </thead>
+                        <tbody id="analytics-tbody">
+                            <tr class="loading-row">
+                                <td colspan="4">
+                                    <div class="spinner"></div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="table-footer">
+                    <span id="analytics-table-count">Chargement...</span>
+                </div>
             </div>
         </div>
 
@@ -1067,6 +1270,26 @@ async function loadData() {
 
     } catch (err) {
         tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;padding:2rem;color:var(--expense);">Erreur : ${err.message}</td></tr>`;
+    }
+
+    // Charger la télémétrie
+    try {
+        const { data, error } = await adminClient
+            .from('analytics_events')
+            .select('*')
+            .order('created_at', { ascending: false });
+
+        if (error) throw error;
+
+        allAnalyticsData = data || [];
+        hasAnalyticsError = false;
+    } catch (err) {
+        console.warn("Télémétrie non configurée ou erreur :", err);
+        hasAnalyticsError = true;
+    }
+
+    if (btnAnalyticsTab.classList.contains('active')) {
+        renderAnalyticsTable();
     }
 }
 
@@ -1394,6 +1617,157 @@ waSendBtn.addEventListener('click', async () => {
     waProgressFill.style.width = '100%';
     waSendBtn.innerHTML = '<ion-icon name="checkmark-outline"></ion-icon> <span>Terminé</span>';
 });
+
+/* =========================================
+   ONGLERIE & TÉLÉMÉTRIE SCRIPT
+========================================= */
+const btnWaitlistTab = document.getElementById('btn-tab-waitlist');
+const btnAnalyticsTab = document.getElementById('btn-tab-analytics');
+const sectionWaitlist = document.getElementById('section-waitlist');
+const sectionAnalytics = document.getElementById('section-analytics');
+
+let allAnalyticsData = [];
+let hasAnalyticsError = false;
+let analyticsSearchTerm = '';
+let analyticsEventFilter = 'all';
+
+btnWaitlistTab.addEventListener('click', () => {
+    btnWaitlistTab.classList.add('active');
+    btnAnalyticsTab.classList.remove('active');
+    sectionWaitlist.style.display = 'block';
+    sectionAnalytics.style.display = 'none';
+});
+
+btnAnalyticsTab.addEventListener('click', () => {
+    btnAnalyticsTab.classList.add('active');
+    btnWaitlistTab.classList.remove('active');
+    sectionWaitlist.style.display = 'none';
+    sectionAnalytics.style.display = 'block';
+    renderAnalyticsTable();
+});
+
+function copySqlCode() {
+    const pre = document.getElementById('sql-code-block');
+    navigator.clipboard.writeText(pre.textContent).then(() => {
+        alert('SQL copié dans le presse-papiers !');
+    }).catch(err => {
+        console.error('Erreur de copie :', err);
+    });
+}
+
+// Listeners Recherche & Filtres Analytics
+document.getElementById('analytics-search-input').addEventListener('input', e => {
+    analyticsSearchTerm = e.target.value.trim();
+    renderAnalyticsTable();
+});
+
+document.getElementById('analytics-event-filter').addEventListener('change', e => {
+    analyticsEventFilter = e.target.value;
+    renderAnalyticsTable();
+});
+
+function updateAnalyticsStats() {
+    const total = allAnalyticsData.length;
+    const devices = new Set(allAnalyticsData.map(r => r.device_id)).size;
+    const expenses = allAnalyticsData.filter(r => r.event_name === 'add_expense').length;
+    const incomes = allAnalyticsData.filter(r => r.event_name === 'add_income').length;
+
+    document.getElementById('stat-active-devices').textContent = devices.toLocaleString('fr-FR');
+    document.getElementById('stat-total-events').textContent = total.toLocaleString('fr-FR');
+    document.getElementById('stat-expense-events').textContent = expenses.toLocaleString('fr-FR');
+    document.getElementById('stat-income-events').textContent = incomes.toLocaleString('fr-FR');
+
+    const totalTransactions = expenses + incomes;
+    const expensePct = totalTransactions > 0 ? Math.round((expenses / totalTransactions) * 100) : 0;
+    const incomePct = totalTransactions > 0 ? Math.round((incomes / totalTransactions) * 100) : 0;
+
+    document.getElementById('stat-expense-detail').textContent = totalTransactions > 0 ? `${expensePct}% du total` : 'Aucune transaction';
+    document.getElementById('stat-income-detail').textContent = totalTransactions > 0 ? `${incomePct}% du total` : 'Aucune transaction';
+}
+
+function renderAnalyticsTable() {
+    const tbodyAn = document.getElementById('analytics-tbody');
+    const countAn = document.getElementById('analytics-table-count');
+    const sqlSetupCard = document.getElementById('analytics-sql-setup');
+    const statsGridAn = document.getElementById('analytics-stats-grid');
+    const toolbarAn = document.querySelector('#section-analytics .table-toolbar');
+    const tableCardAn = document.querySelector('#section-analytics .table-card');
+
+    if (hasAnalyticsError) {
+        sqlSetupCard.style.display = 'block';
+        statsGridAn.style.display = 'none';
+        toolbarAn.style.display = 'none';
+        tableCardAn.style.display = 'none';
+        return;
+    }
+
+    sqlSetupCard.style.display = 'none';
+    statsGridAn.style.display = 'grid';
+    toolbarAn.style.display = 'flex';
+    tableCardAn.style.display = 'block';
+
+    let rows = [...allAnalyticsData];
+
+    // Filtre d'événement
+    if (analyticsEventFilter !== 'all') {
+        rows = rows.filter(r => r.event_name === analyticsEventFilter);
+    }
+
+    // Filtre de recherche
+    if (analyticsSearchTerm) {
+        const q = analyticsSearchTerm.toLowerCase();
+        rows = rows.filter(r =>
+            (r.event_name || '').toLowerCase().includes(q) ||
+            (r.device_id || '').toLowerCase().includes(q) ||
+            JSON.stringify(r.properties || {}).toLowerCase().includes(q)
+        );
+    }
+
+    updateAnalyticsStats();
+
+    if (rows.length === 0) {
+        tbodyAn.innerHTML = `
+            <tr><td colspan="4">
+                <div class="table-empty">
+                    <div class="table-empty-icon"><ion-icon name="analytics-outline"></ion-icon></div>
+                    <div class="table-empty-text">${allAnalyticsData.length === 0 ? 'Aucun événement de télémétrie enregistré.' : 'Aucun résultat pour cette recherche.'}</div>
+                </div>
+            </td></tr>`;
+        countAn.textContent = '0 résultat';
+        return;
+    }
+
+    tbodyAn.innerHTML = rows.map(r => {
+        let propsHtml = '';
+        if (r.properties && Object.keys(r.properties).length > 0) {
+            propsHtml = Object.entries(r.properties).map(([k, v]) => {
+                let badgeClass = 'badge-prop-neutral';
+                if (k === 'category') badgeClass = 'badge-prop-category';
+                return `<span class="badge-prop ${badgeClass}"><strong>${escHtml(k)}:</strong> ${escHtml(v)}</span>`;
+            }).join(' ');
+        } else {
+            propsHtml = '<span class="cell-email empty">Aucun détail</span>';
+        }
+
+        let eventBadgeClass = 'badge-evt-default';
+        if (r.event_name === 'add_expense') eventBadgeClass = 'badge-evt-expense';
+        else if (r.event_name === 'add_income') eventBadgeClass = 'badge-evt-income';
+        else if (r.event_name === 'app_open') eventBadgeClass = 'badge-evt-open';
+        else if (r.event_name === 'reset_data') eventBadgeClass = 'badge-evt-reset';
+
+        const shortDevice = (r.device_id || 'unknown').substring(0, 8) + '...';
+
+        return `
+            <tr>
+                <td><span class="cell-date">${formatDateLong(r.created_at)}</span></td>
+                <td><span class="cell-phone" title="${escHtml(r.device_id)}">${escHtml(shortDevice)}</span></td>
+                <td><span class="badge-evt ${eventBadgeClass}">${escHtml(r.event_name)}</span></td>
+                <td><div style="display:flex; flex-wrap:wrap; gap:4px;">${propsHtml}</div></td>
+            </tr>`;
+    }).join('');
+
+    countAn.textContent = `${rows.length} événement${rows.length > 1 ? 's' : ''}${analyticsSearchTerm || analyticsEventFilter !== 'all' ? ` (sur ${allAnalyticsData.length})` : ''}`;
+}
 </script>
 </body>
 </html>
